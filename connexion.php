@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr-FR">
-<?php require_once("inc/header.php"); ?>
+<?php require_once("inc/head.php"); ?>
     <div class="container">
         <main class="main">
-            <a class="abs-lien">Acceuil</a>
-            <section class="content">
-                <article class="">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem velit quaerat error esse, optio harum dolor sequi ad expedita aliquid provident sint corrupti debitis accusamus omnis totam quibusdam corporis, consectetur fugiat. Aspernatur ab itaque nesciunt quis officia maiores eum, aperiam libero. Suscipit tempora iste aspernatur necessitatibus quidem non asperiores modi.</p>
-                </article>
+            <a class="left-lien custom-btn">Acceuil</a>
+            <section class="content flex-r">
+                <form action="inc/b_conn.php" method="post" class="form">
+                    <input type="text" name="login" id="login" class="inp">
+                    <input type="password" name="password" id="password" class="inp">
+
+                    <input type="submit" value="connexion" class='inp'>
+
+                    <p>Voulez-vouz inscrit ? <a href="inscription.php">click-ici</a> </p>                
+                </form>
             </section>
         </main>
     </div>

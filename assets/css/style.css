@@ -6,10 +6,16 @@
     line-height: 1.6;
 }
 
-.abs-lien {
+.left-lien {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+.right-lien {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .custom-btn {
@@ -21,6 +27,7 @@
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
     background-color: #333;
+    color: white;
 }
 
 .custom-btn:hover {
@@ -40,7 +47,6 @@ li {list-style: none;} a {text-decoration: none;}
     width: 1140px;
     padding: 10px;
     margin: auto;
-    background-color: bisque;
 }
 
 .flex-c {
@@ -50,6 +56,7 @@ li {list-style: none;} a {text-decoration: none;}
     align-items: center;
 }
 
+/* ------------------------ Start Header Style ------------------------ */
 header {
     height: 70px;
     width: 100%;
@@ -63,8 +70,47 @@ header .menu li a {
     color: white;
 }
 
+/* ------------------------ End Header Style ------------------------ */
+
 .title {
     text-align: center;
     padding: 50px;
 }
+
+
+.content {
+    min-height: 100vh;
+}
+
+
+
+/* ------------------------ Start From Style ------------------------ */
+
+.content .form {
+    width: 400px;
+    height: 100%;
+    max-height: 430px;
+    background-color: rgb(105, 152, 152);
+    padding: 10px;
+    margin: auto ;
+}
+
+.content .form .inp {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    outline: none;
+    border: none;
+}
+
+.content .form .inp[type="submit"] {
+    cursor: pointer;
+}
+
+.content .form .inp[type="submit"]:hover {
+    background-color: aqua;
+}
+
+
+/* ------------------------ End From Style ------------------------ */
 
