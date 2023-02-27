@@ -9,7 +9,7 @@
 <body>
     <header>
         <ul class="menu flex-r">
-            <li><a href="acceuil.php">acceuil</a></li>
+            <li><a href="index.php">acceuil</a></li>
             <li><a href="connexion.php">connexion</a></li>
             <li><a href="inscription.php">inscription</a></li>
             <li><a href="classement.php">classement</a></li>
