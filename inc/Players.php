@@ -48,8 +48,8 @@
 
             if($req->rowCount()) {
                 $player_obj = $req->fetchObject();
-                $_SESSION["user"] = $player_obj;
                 $this->update_local_data($player_obj);
+                $_SESSION["user"] = $player_obj;
                 return true;
             } 
             return false;
@@ -86,6 +86,14 @@
             session_destroy();
         }
 
+        public function delete() {
+            $sql = "DELETE FROM ".$this->get_table_name()." WHERE id = '$this->id'";
+            $req = $this->conn->query($sql);
+
+            $this->disconnect();//pour les déconnexion
+            return $req;
+        }
+
         protected function delete_properties() {
             foreach(array_keys((array)$this->get_properties()) as $key) {
                 $this->$key = null;
@@ -94,7 +102,10 @@
 
         /* ---------------- Getters Methods ------------------- */
         public function get_properties() {
-            return $_SESSION["user"];
+            if(isset($_SESSION["user"])) {
+                return $_SESSION["user"];
+            }
+            return false;
         }
 
         public function get_id() {
@@ -146,7 +157,6 @@
         }
 
         /* ------------------ Static Methods ------------------ */
-
     }
 
     $player = new Players();
@@ -176,20 +186,37 @@
 
     echo "<br>";
     
-    var_dump($player->get_best_score());
 
     echo "<br>";
     
-
-    $player->set_score(44);
+    if($player->is_connected()) {
+        $player->set_score(4);
+    }
     echo "<br>--------------------------------------------------------------------<br>";
 
-    var_dump($player->get_properties());
+    if($player->is_connected()) {
+        var_dump($player->get_properties());
+    }
 
     echo "<br>";
+    if($player->is_connected()) {
+        var_dump($player->get_best_score());
+    }
+    echo "<br>";
     
-    var_dump($player->get_best_score());
+    
+    //$player->delete();
 
+    echo "<br>--------------------------------------------------------------------<br>";
+    if($player->is_connected()) {
+        var_dump($player->get_properties());
+    }
+    echo "<br>";
+
+
+    if($player->is_connected()) {
+        var_dump($player->get_best_score());
+    }
     echo "<br>";
     
 
