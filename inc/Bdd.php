@@ -6,7 +6,7 @@
         protected $dbname;
         protected $cnx;
 
-        public function __construct($server_name = "localhost", $username = "root", $db_password = "", $dbname = "classes") {
+        public function __construct($server_name = "localhost", $username = "root", $db_password = "", $dbname = "memory") {
             if(!session_id()) {
                 session_start();
             }
@@ -16,7 +16,9 @@
             $this->db_password = $db_password;
             $this->dbname = $dbname;
             
-            $this->connexion();
+            return $this->connexion();
+
+            
         }
 
         private function connexion() {
@@ -24,7 +26,8 @@
                 $this->cnx = new PDO("mysql:host=$this->server_name; dbname=$this->dbname", $this->username, $this->db_password);
                 $this->cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                echo "connexion réussie";
+                //echo "connexion réussie";
+                return $this->cnx;
 
             } catch (PDOException $e){
                 print "Erreur !: " . $e->getMessage() . "<br/>";
