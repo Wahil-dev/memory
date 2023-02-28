@@ -16,8 +16,8 @@
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
-            $this->best_score = null;
-            $this->ranking = null;
+            $this->best_score = 0;
+            $this->ranking = 0;
             $this->click = 0; //number of click
         }
 
@@ -128,10 +128,17 @@
         /* ---------------- Setters Methods ------------------- */
         public function set_score($score) {
             $this->score = $score;
+            if($this->get_score() < $this->get_best_score()) {
+                $this->set_best_score();
+            }
         }
 
-        public function set_best_score($score) {
-            $this->best_score = $score;
+        protected function set_best_score() {
+            $new_best_score = $_SESSION["user"]->best_score = $this->best_score = $this->get_score();
+            $sql = "UPDATE ".$this->get_table_name()." SET best_score = ?";
+            $req = $this->conn->prepare($sql);
+            $req->bindParam(1, $new_best_score);
+            $req->execute();
         }
 
         public function set_click() {
@@ -169,24 +176,20 @@
 
     echo "<br>";
     
-    var_dump($player->get_id());
+    var_dump($player->get_best_score());
 
     echo "<br>";
     
-    var_dump($player->is_connected());
 
-    $player->disconnect();
+    $player->set_score(44);
     echo "<br>--------------------------------------------------------------------<br>";
 
-    if(isset($_SESSION["user"])) {
-        var_dump($_SESSION["user"]);
-    }
+    var_dump($player->get_properties());
 
     echo "<br>";
     
-    var_dump($player->get_id());
+    var_dump($player->get_best_score());
 
     echo "<br>";
     
-    var_dump($player->is_connected());
 
