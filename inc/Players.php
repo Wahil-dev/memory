@@ -54,7 +54,7 @@
             } 
             return false;
         }
-
+        
         public function is_exist($login) {
             $sql = "SELECT * FROM ".$this->get_table_name()." WHERE login = ?";
             $req = $this->conn->prepare($sql);
@@ -67,6 +67,13 @@
             return false;
         }
 
+        public function is_connected() {
+            if($this->id) {
+                return true;
+            }
+            return false;
+        }
+
         public function update_local_data($data) {
             foreach($data as $key => $value) {
                 $this->$key = $value;
@@ -74,7 +81,7 @@
         }
 
         /* ---------------- Getters Methods ------------------- */
-        public function get_property() {
+        public function get_properties() {
             return $_SESSION["user"];
         }
 
@@ -147,11 +154,11 @@
 
     echo "<br>";
     
-    $data = $player->update_local_data($_SESSION["user"]);
+    //$data = $player->update_local_data($_SESSION["user"]);
     
     var_dump($player->get_id());
 
     echo "<br>";
     
-    var_dump($player->get_property());
+    var_dump($player->is_connected());
 
