@@ -39,11 +39,10 @@
             return false;
         }
 
-        public function is_exist($login, $password) {
-            $sql = "SELECT * FROM ".$this->get_table_name()." WHERE login = ? && password = ?";
+        public function is_exist($login) {
+            $sql = "SELECT * FROM ".$this->get_table_name()." WHERE login = ?";
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $login);
-            $req->bindParam(2, $password);
             $req->execute();
 
             if($req->rowCount()) {
@@ -84,8 +83,14 @@
     }
 
     $player = new Players();
-    if($player->is_exist("wahil", "bvbu")) {
-        echo "identifiant déja utiliser";
-    } else {
-        var_dump($player->register("wahil", "bvbu"));
-    }
+    // if($player->is_exist("wahil")) {
+    //     echo "identifiant déja utiliser";
+    // } else {
+    //     if($player->register("wahil", "bvb")) {
+    //         echo "user inscrit";
+    //     } else {
+    //         echo "user n'est pas inscrit";
+    //     };
+    // }
+
+    
