@@ -25,18 +25,23 @@
         public function register($login, $password) {
             $sql = "INSERT INTO ".$this->get_table_name()."(login, password, best_score, ranking) VALUES(?, ?, ?, ?)";
 
-            $best_score = 4;
+            $best_score = $this->get_best_score();
+            $ranking = $this->get_ranking();
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $login);
             $req->bindParam(2, $password);
             $req->bindParam(3, $best_score);
-            $req->bindParam(4, $best_score);
+            $req->bindParam(4, $ranking);
             $req->execute();
             
             if($req->rowCount()) {
                 return true;
             }
             return false;
+        }
+
+        public function connect($login, $password) {
+            
         }
 
         public function is_exist($login) {
@@ -83,14 +88,15 @@
     }
 
     $player = new Players();
-    // if($player->is_exist("wahil")) {
-    //     echo "identifiant déja utiliser";
-    // } else {
-    //     if($player->register("wahil", "bvb")) {
-    //         echo "user inscrit";
-    //     } else {
-    //         echo "user n'est pas inscrit";
-    //     };
-    // }
+    $login = "wahil";
+    $password = "bvb";
+    if($player->is_exist(login: $login)) {
+        echo "identifiant déja utiliser";
+    } else {
+        if($player->register(login: $login, password: $password)) {
+            echo "user inscrit";
+        } else {
+            echo "user n'est pas inscrit";
+        };
+    }
 
-    
