@@ -6,6 +6,18 @@
     line-height: 1.6;
 }
 
+:root {
+    --danger-color: #DC3545;
+}
+
+.error-msg {
+    color: white;
+    background-color: var(--danger-color);
+    padding: 5px 10px;
+    width: 100%;
+    font-size: .8em;
+}
+
 .left-lien {
     position: absolute;
     top: 10px;

@@ -155,68 +155,8 @@
         public function set_click() {
             $this->click++;
         }
-
-        /* ------------------ Static Methods ------------------ */
     }
 
     $player = new Players();
-    $login = "wahil";
-    $password = "bvb";
-    // if($player->is_exist(login: $login)) {
-    //     echo "identifiant déja utiliser";
-    // } else {
-    //     if($player->register(login: $login, password: $password)) {
-    //         echo "user inscrit";
-    //     } else {
-    //         echo "user n'est pas inscrit";
-    //     };
-    // }
 
-    if($player->connect(login: $login, password: $password)) {
-        echo "player connecter";
-    } else {
-        echo "identifiant n'est pas valide";
-    }
-
-    echo "<br>";
-
-    if(isset($_SESSION["user"])) {
-        var_dump($_SESSION["user"]);
-    }
-
-    echo "<br>";
-    
-
-    echo "<br>";
-    
-    if($player->is_connected()) {
-        $player->set_score(4);
-    }
-    echo "<br>--------------------------------------------------------------------<br>";
-
-    if($player->is_connected()) {
-        var_dump($player->get_properties());
-    }
-
-    echo "<br>";
-    if($player->is_connected()) {
-        var_dump($player->get_best_score());
-    }
-    echo "<br>";
-    
-    
-    //$player->delete();
-
-    echo "<br>--------------------------------------------------------------------<br>";
-    if($player->is_connected()) {
-        var_dump($player->get_properties());
-    }
-    echo "<br>";
-
-
-    if($player->is_connected()) {
-        var_dump($player->get_best_score());
-    }
-    echo "<br>";
-    
 
