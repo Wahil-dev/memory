@@ -16,8 +16,8 @@
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
-            $this->best_score = 99;
-            $this->ranking = 99;
+            $this->best_score = null;
+            $this->ranking = null;
             $this->click = 0; //number of click
         }
 
@@ -80,6 +80,18 @@
             }
         }
 
+        public function disconnect() {
+            $this->delete_properties();
+            session_unset();
+            session_destroy();
+        }
+
+        protected function delete_properties() {
+            foreach(array_keys((array)$this->get_properties()) as $key) {
+                $this->$key = null;
+            }
+        }
+
         /* ---------------- Getters Methods ------------------- */
         public function get_properties() {
             return $_SESSION["user"];
@@ -125,6 +137,9 @@
         public function set_click() {
             $this->click++;
         }
+
+        /* ------------------ Static Methods ------------------ */
+
     }
 
     $player = new Players();
@@ -140,21 +155,34 @@
     //     };
     // }
 
-    // if($player->connect(login: $login, password: $password)) {
-    //     echo "player connecter";
-    // } else {
-    //     echo "identifiant n'est pas valide";
-    // }
+    if($player->connect(login: $login, password: $password)) {
+        echo "player connecter";
+    } else {
+        echo "identifiant n'est pas valide";
+    }
 
     echo "<br>";
 
     if(isset($_SESSION["user"])) {
-        //var_dump($_SESSION["user"]);
+        var_dump($_SESSION["user"]);
     }
 
     echo "<br>";
     
-    //$data = $player->update_local_data($_SESSION["user"]);
+    var_dump($player->get_id());
+
+    echo "<br>";
+    
+    var_dump($player->is_connected());
+
+    $player->disconnect();
+    echo "<br>--------------------------------------------------------------------<br>";
+
+    if(isset($_SESSION["user"])) {
+        var_dump($_SESSION["user"]);
+    }
+
+    echo "<br>";
     
     var_dump($player->get_id());
 
