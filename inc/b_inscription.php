@@ -43,9 +43,8 @@
 
     if(empty($loginErr) && empty($passwordErr) && empty($cPasswordErr)) {
         $player->register($login, $password);
-
         Model::display_message("vous etés bien inscrit");
-        header("refresh:.1; url=../connexion.php");
+        header("refresh: .1; url=../connexion.php");
         exit();
     } else {
         !empty($loginErr) ? $_SESSION["loginErr"] = $loginErr : '';

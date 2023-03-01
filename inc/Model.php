@@ -27,8 +27,7 @@
         }
 
         public static function display_message($message) {
-            $mess = "<script>$message</script>";
-            echo $mess;
+            echo "<script>alert('$message')</script>";
         }
 
         public static function delete_err_session() {
@@ -36,23 +35,6 @@
                 if(str_contains($key, "Err")) {
                     unset($_SESSION[$key]);
                 }
-            }
-        }
-
-        public static function print_is_isset($method = 'post', $name) {
-            switch ($method) {
-                case "post":
-                    if(!isset($_POST[$name])) {
-                        return $_POST[$name];
-                    }
-
-                case "get":
-                    if(isset($_GET[$name])) {
-                        return $_GET[$name];
-                    }
-                
-                default:
-                    return false;
             }
         }
 
