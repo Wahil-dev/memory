@@ -1,7 +1,8 @@
 <?php
     require_once("inc/Players.php"); 
-    $player->update_local_data($_SESSION["player"]);
-    
+    if(isset($_SESSION["player"])) {
+        $player->update_local_data($_SESSION["player"]);
+    }
     //redirection
     $player->redirect_if_is_connected();
 ?>

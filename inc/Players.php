@@ -22,6 +22,7 @@
             $this->best_score = 0;
             $this->ranking = 0;
             $this->click = 0; //number of click
+            $this->score = 0; //number of click
         }
 
         /* ---------------- Others Methods ------------------ */
@@ -51,11 +52,11 @@
 
             if($req->rowCount()) {
                 $player_obj = $req->fetchObject();
-                $this->update_local_data($player_obj);
+
                 $_SESSION["player"] = $player_obj;
                 $_SESSION["score"] = $this->get_score();
                 $_SESSION["click"] = $this->get_number_of_click();
-                $_SESSION["player"] = $player_obj;
+
                 $this->current_player = $this;
                 return true;
             } 
@@ -85,15 +86,15 @@
             foreach($data as $key => $value) {
                 $this->$key = $value;
             }
-
-            $this->set_score($_SESSION["score"]);
-            $this->set_click($_SESSION["click"]);
         }
 
         public function disconnect() {
             $this->delete_properties();
             session_unset();
             session_destroy();
+
+            header("location: ../index.php");
+            exit();
         }
 
         public function delete() {
@@ -169,15 +170,29 @@
 
         protected function set_best_score() {
             $new_best_score = $_SESSION["player"]->best_score = $this->best_score = $this->get_score();
-            $sql = "UPDATE ".$this->get_table_name()." SET best_score = ?";
+            $sql = "UPDATE ".$this->get_table_name()." SET best_score = ? WHERE id = ?";
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $new_best_score);
+            $req->bindParam(2, $this->id);
             $req->execute();
         }
 
         public function set_click() {
             $this->click = $_SESSION["click"] + 1;
             $_SESSION["click"] = $this->get_number_of_click();
+        }
+
+        public function set_ranking($new_rank) {
+            if($new_rank < $this->get_ranking()) {
+                $this->ranking = $new_rank;
+                $_SESSION["player"]->ranking = $this->get_ranking();
+
+                $sql = "UPDATE ".$this->get_table_name()." SET ranking = ? WHERE id = ?";
+                $req = $this->conn->prepare($sql);
+                $req->bindParam(1, $new_rank);
+                $req->bindParam(2, $this->id);
+                $req->execute();
+            }
         }
     }
 

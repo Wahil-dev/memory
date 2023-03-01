@@ -1,4 +1,12 @@
-<?php require_once("inc/Model.php"); ?>
+<?php
+    require_once("inc/Players.php"); 
+    if(isset($_SESSION["player"])) {
+        $player->update_local_data($_SESSION["player"]);
+    }
+    
+    //redirection
+    $player->redirect_if_is_connected();
+?>
 
 <!DOCTYPE html>
 <html lang="fr-FR">
