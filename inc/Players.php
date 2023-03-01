@@ -1,5 +1,6 @@
 <?php
     require("Bdd.php");
+    require("Model.php");
     
     class Players extends Bdd {
         private $id;
@@ -9,6 +10,8 @@
         protected $score;
         protected $best_score;
         protected $ranking;
+
+        private $current_player;
 
         protected $tbname;
         public $conn;
@@ -49,7 +52,11 @@
             if($req->rowCount()) {
                 $player_obj = $req->fetchObject();
                 $this->update_local_data($player_obj);
-                $_SESSION["user"] = $player_obj;
+                $_SESSION["player"] = $player_obj;
+                $_SESSION["score"] = $this->get_score();
+                $_SESSION["click"] = $this->get_number_of_click();
+                $_SESSION["player"] = $player_obj;
+                $this->current_player = $this;
                 return true;
             } 
             return false;
@@ -78,6 +85,9 @@
             foreach($data as $key => $value) {
                 $this->$key = $value;
             }
+
+            $this->set_score($_SESSION["score"]);
+            $this->set_click($_SESSION["click"]);
         }
 
         public function disconnect() {
@@ -100,10 +110,17 @@
             }
         }
 
+        public function redirect_if_is_connected() {
+            if($this->is_connected()) {
+                header("location: index.php");
+                exit();
+            }
+        }
+
         /* ---------------- Getters Methods ------------------- */
         public function get_properties() {
-            if(isset($_SESSION["user"])) {
-                return $_SESSION["user"];
+            if(isset($_SESSION["player"])) {
+                return $_SESSION["player"];
             }
             return false;
         }
@@ -132,6 +149,10 @@
             return $this->click;
         }
 
+        public function get_current_player() {
+            return $this->current_player;
+        }
+
         protected function get_table_name() {
             return $this->tbname;
         }
@@ -139,13 +160,15 @@
         /* ---------------- Setters Methods ------------------- */
         public function set_score($score) {
             $this->score = $score;
+            $_SESSION["score"] = $this->get_score();
+
             if($this->get_score() < $this->get_best_score()) {
                 $this->set_best_score();
             }
         }
 
         protected function set_best_score() {
-            $new_best_score = $_SESSION["user"]->best_score = $this->best_score = $this->get_score();
+            $new_best_score = $_SESSION["player"]->best_score = $this->best_score = $this->get_score();
             $sql = "UPDATE ".$this->get_table_name()." SET best_score = ?";
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $new_best_score);
@@ -153,7 +176,8 @@
         }
 
         public function set_click() {
-            $this->click++;
+            $this->click = $_SESSION["click"] + 1;
+            $_SESSION["click"] = $this->get_number_of_click();
         }
     }
 
