@@ -1,6 +1,7 @@
 <?php
-    require("Bdd.php");
-    require("Model.php");
+    require_once("Bdd.php");
+    require_once("Model.php");
+    require_once("Ranking.php");
     
     class Players extends Bdd {
         private $id;
@@ -9,32 +10,32 @@
         protected $click;
         protected $score;
         protected $best_score;
-        protected $ranking;
+        protected $my_rank;
 
+        protected $ranking_list;
         private $current_player;
-
         protected $tbname;
         public $conn;
 
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
-            $this->best_score = 0;
-            $this->ranking = 0;
+            $this->best_score = 5;
             $this->click = 0; //number of click
-            $this->score = 0; //number of click
+            $this->ranking_list = new Ranking();
         }
 
         /* ---------------- Others Methods ------------------ */
         public function register($login, $password) {
             $sql = "INSERT INTO ".$this->get_table_name()."(login, password, best_score, ranking) VALUES(?, ?, ?, ?)";
-            $best_score = $this->get_best_score();
-            $ranking = $this->get_ranking();
+
+            $this->my_rank = $this->initialize_rank();
+
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $login);
             $req->bindParam(2, $password);
-            $req->bindParam(3, $best_score);
-            $req->bindParam(4, $ranking);
+            $req->bindParam(3, $this->best_score);
+            $req->bindParam(4, $this->my_rank);
             $req->execute();
             
             if($req->rowCount()) {
@@ -142,8 +143,8 @@
             return $this->best_score;
         }
 
-        public function get_ranking() {
-            return $this->ranking;
+        public function get_my_rank() {
+            return $this->my_rank;
         }
 
         public function get_number_of_click() {
@@ -182,18 +183,26 @@
             $_SESSION["click"] = $this->get_number_of_click();
         }
 
-        public function set_ranking($new_rank) {
-            if($new_rank < $this->get_ranking()) {
-                $this->ranking = $new_rank;
-                $_SESSION["player"]->ranking = $this->get_ranking();
+        protected function initialize_rank() {
+            $sql = "SELECT MAX(ranking) as my_rank FROM ".$this->get_table_name();
+            $req = $this->conn->prepare($sql);
+            $req->execute();
 
-                $sql = "UPDATE ".$this->get_table_name()." SET ranking = ? WHERE id = ?";
-                $req = $this->conn->prepare($sql);
-                $req->bindParam(1, $new_rank);
-                $req->bindParam(2, $this->id);
-                $req->execute();
-            }
+            return $req->fetchObject()->my_rank + 1; // 1 plus le dernier rank
         }
+
+        // protected function set_rank($rank) {
+        //     if($new_rank < $this->get_my_rank()) {
+        //         $this->my_rank = $new_rank;
+        //         $_SESSION["player"]->ranking = $this->get_my_rank();
+
+        //         $sql = "UPDATE ".$this->get_table_name()." SET ranking = ? WHERE id = ?";
+        //         $req = $this->conn->prepare($sql);
+        //         $req->bindParam(1, $new_rank);
+        //         $req->bindParam(2, $id);
+        //         $req->execute();
+        //     }
+        // }
     }
 
     $player = new Players();

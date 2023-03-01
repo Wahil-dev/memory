@@ -126,3 +126,27 @@ header .menu li a {
 
 /* ------------------------ End From Style ------------------------ */
 
+
+
+/* ------------------------ Start classement Style ------------------------ */
+.classement {
+    
+}
+
+.classement .table {
+    background-color: rgba(0, 0, 0, 0.388);
+    border-spacing: 0;
+    text-align: center;
+    width: 100%;
+
+}
+
+.classement .table :is(td, th) {
+    border: 1px solid rgb(0, 0, 0);
+    color: white;
+    padding: 5px;
+}
+
+
+/* ------------------------ End classement Style ------------------------ */
+

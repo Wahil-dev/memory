@@ -16,12 +16,12 @@
             $this->db_password = $db_password;
             $this->dbname = $dbname;
             
-            return $this->connexion();
+            return $this->connection();
 
             
         }
 
-        private function connexion() {
+        private function connection() {
             try {
                 $this->cnx = new PDO("mysql:host=$this->server_name; dbname=$this->dbname", $this->username, $this->db_password);
                 $this->cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
