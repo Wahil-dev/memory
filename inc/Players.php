@@ -125,13 +125,9 @@
             return $req->fetchObject()->ranking + 1; // 1 plus le dernier rank
         }
 
-        public function update_score($even_number) {
-            $new_score = $this->get_number_of_click() / $even_number; //rule
-            $this->set_score($new_score);
-
-            if($this->get_score() < $this->get_best_score()) {
-                $this->set_best_score();
-            }
+        public function calcul_score_game($even_number) {
+            $score_game = $this->get_number_of_click() / $even_number; //rule
+            $this->set_score($score_game);
         }
 
         //Pour la reconnexion 
@@ -186,12 +182,15 @@
         <?php }
 
         public function update_ranking_list() {
+            //mise a jour le classement des joueur quand qullqu'un atteint un nouveau best_score
             $player = $this->get_all_players();
             for($i = 0 ; isset($player[$i]); $i++) {
                 $this->process_rank($player[$i]->id, $i);
             }
-        }
 
+            //set new_rank
+            $this->set_rank($this->get_rank_by_id()->ranking);
+        }
 
 
         /* ---------------- Getters Methods ------------------- */
@@ -264,7 +263,7 @@
             return $req->fetchAll(PDO::FETCH_OBJ);
         }
 
-        public function get_best_ten_player() {
+        public function get_best_ten_player() :array {
             $sql = "SELECT id, login, ranking, best_score FROM ".$this->get_table_name()." 
             ORDER BY best_score ASC LIMIT 10 OFFSET 0";  
             $req = $this->conn->prepare($sql);
@@ -275,9 +274,12 @@
 
 
         /* ---------------- Setters Methods ------------------- */
-        public function set_score($score_game) {
+        protected function set_score($score_game) {
             $_SESSION["score"] = $score_game;
 
+            if($this->get_score() < $this->get_best_score()) {
+                $this->set_best_score();
+            }
             //supprimer ou vider la valuer de session score apres la fin du partie (quand on efface la fenêtre sortie a la finn de la partie) =crie un function new_game est mit a l'intérieur session['score] = null, session['click] = 0 ... 
         }
 
@@ -290,7 +292,7 @@
             $req->execute();
 
             //mettre a jour les classement de joueur
-            $this->update_rank();
+            $this->update_ranking_list();
         }
 
         public function set_click() {
@@ -300,15 +302,6 @@
         protected function set_rank($new_rank) {
             $this->ranking = $new_rank;
             $_SESSION["player"]->ranking = $new_rank;
-        }
-
-        protected function update_rank() {
-            //mise a jour le classement des joueur quand qullqu'un atteint un nouveau best_score
-            $this->update_ranking_list();
-
-            //set new_rank
-            $this->set_rank($this->get_rank_by_id()->ranking);
-            
         }
     }
 

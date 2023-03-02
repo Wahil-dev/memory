@@ -1,13 +1,10 @@
 <?php
     require_once("inc/Players.php"); 
-    $player = Players::get_instance();
-    if(isset($_SESSION["player"])) {
-        $login = $_SESSION["player"]->login;
-        $password = $_SESSION["player"]->password;
-        //reconnexion avec les donnes stocker dans la session player quand creer dans la method player->connect() qu'on a appeler la 1er fois sur la page connexion.php 
-        $player->connect($login, $password);
 
+    if(isset($_SESSION["player"])) {
+        $player->re_login();
     }
+    
     //redirection
     $player->redirect_if_is_connected();
 ?>
