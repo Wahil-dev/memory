@@ -3,31 +3,6 @@
     if(isset($_SESSION["player"])) {
         $player->update_local_data($_SESSION["player"]);
 
-        var_dump($player->get_properties());
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo $player->get_my_rank()." = get_my_rank";
-        echo "<br>";
-        echo $player->get_best_score()." = get_best_score";
-        echo $player->get_score()." = get_score";
-        echo "<br>";
-        echo $player->get_number_of_click()." = get_click";
-        echo "<br>";
-        echo $player->set_click()." = set_click";
-        echo "<br>";
-        echo $player->get_number_of_click()." = get_click";
-        echo "<br>";
-        echo $player->get_score()." = get_score";
-        echo "<br>";
-        //echo $player->set_score(6)." = set_score($new_score)";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
     }
     
 ?>

@@ -26,7 +26,6 @@
         public function get_best_ten_player() {
             $sql = "SELECT id, login, ranking, best_score FROM ".$this->get_table_name()." 
             ORDER BY best_score ASC LIMIT 10 OFFSET 0";  
-            
             $req = $this->conn->prepare($sql);
             $req->execute();
 
@@ -83,10 +82,9 @@
         <?php }
 
         public function update_ranking_list() {
-            $i = 0;
-            $player = $this->get_all_players()[$i];
-            for($i ; isset($players[$i]); $i++) {
-                $this->process_rank($player->id, $i);
+            $player = $this->get_all_players();
+            for($i = 0 ; isset($player[$i]); $i++) {
+                $this->process_rank($player[$i]->id, $i);
             }
         }
     }

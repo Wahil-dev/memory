@@ -17,6 +17,7 @@
     <header>
         <?php if($player->is_connected()): ?>
             <ul class="menu flex-r">
+                <li><a href="index.php"><?php echo $player->get_login()?></a></li>
                 <li><a href="index.php">acceuil</a></li>
                 <li><a href="connexion.php">game</a></li>
                 <li><a href="classement.php">classement</a></li>

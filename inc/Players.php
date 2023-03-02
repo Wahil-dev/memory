@@ -10,17 +10,27 @@
         protected $click;
         protected $score;
         protected $best_score;
-        protected $my_rank;
+        protected $ranking;
 
         protected $ranking_list;
         private $current_player;
         protected $tbname;
         public $conn;
 
+        private static $instance = NULL;
+
+        //Get object created
+        public static function get_instance() {
+            if(self::$instance === NULL) {
+                self::$instance = new self();
+            }
+            return self::$instance;
+        }
+
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
-            $this->best_score = 8;
+            $this->best_score = 999;
             $this->click = 0; //number of click
             $this->ranking_list = new Ranking();
         }
@@ -29,13 +39,13 @@
         public function register($login, $password) {
             $sql = "INSERT INTO ".$this->get_table_name()."(login, password, best_score, ranking) VALUES(?, ?, ?, ?)";
 
-            $this->my_rank = $this->initialize_rank();
+            $this->ranking = $this->initialize_rank();
 
             $req = $this->conn->prepare($sql);
             $req->bindParam(1, $login);
             $req->bindParam(2, $password);
             $req->bindParam(3, $this->best_score);
-            $req->bindParam(4, $this->my_rank);
+            $req->bindParam(4, $this->ranking);
             $req->execute();
             
             if($req->rowCount()) {
@@ -53,6 +63,9 @@
 
             if($req->rowCount()) {
                 $player_obj = $req->fetchObject();
+
+                //remplire les attribut de player
+                $this->update_local_data($player_obj);
 
                 $_SESSION["player"] = $player_obj;
                 $_SESSION["score"] = $this->get_score();
@@ -120,11 +133,11 @@
         }
         
         protected function initialize_rank() {
-            $sql = "SELECT MAX(ranking) as my_rank FROM ".$this->get_table_name();
+            $sql = "SELECT MAX(ranking) as ranking FROM ".$this->get_table_name();
             $req = $this->conn->prepare($sql);
             $req->execute();
 
-            return $req->fetchObject()->my_rank + 1; // 1 plus le dernier rank
+            return $req->fetchObject()->ranking + 1; // 1 plus le dernier rank
         }
 
         /* ---------------- Getters Methods ------------------- */
@@ -151,8 +164,8 @@
             return $this->best_score;
         }
 
-        public function get_my_rank() {
-            return $this->my_rank;
+        public function get_ranking() {
+            return $this->ranking;
         }
 
         public function get_number_of_click() {
@@ -206,7 +219,7 @@
         }
 
         protected function set_rank($new_rank) {
-            $this->my_rank = $new_rank;
+            $this->ranking = $new_rank;
             $_SESSION["player"]->ranking = $new_rank;
         }
 
@@ -220,6 +233,6 @@
         }
     }
 
-    $player = new Players();
+    $player = Players::get_instance();
 
 
