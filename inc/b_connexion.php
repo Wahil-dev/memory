@@ -30,6 +30,9 @@
 
     if(empty($loginErr) && empty($passwordErr)) {
         if($player->connect($login, $password)) {
+
+            $_SESSION["score"] = 0;
+            $_SESSION["click"] = 0;
             header("location: ../index.php");
             exit();
         } else {

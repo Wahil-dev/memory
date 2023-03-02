@@ -31,7 +31,6 @@
             $this->conn = Parent::__construct();
             $this->tbname = "players";
             $this->best_score = 999;
-            $this->click = 0; //number of click
             $this->ranking_list = new Ranking();
         }
 
@@ -67,9 +66,8 @@
                 //remplire les attribut de player
                 $this->update_local_data($player_obj);
 
+                //session player pour l'utiliser pour la connexion sur les autres pages de site et pour autres utlisations
                 $_SESSION["player"] = $player_obj;
-                $_SESSION["score"] = $this->get_score();
-                $_SESSION["click"] = $this->get_number_of_click();
 
                 $this->current_player = $this;
                 return true;
@@ -140,12 +138,28 @@
             return $req->fetchObject()->ranking + 1; // 1 plus le dernier rank
         }
 
+        public function update_score($even_number) {
+            $new_score = $this->get_number_of_click() / $even_number; //rule
+            $this->set_score($new_score);
+
+            if($this->get_score() < $this->get_best_score()) {
+                $this->set_best_score();
+            }
+        }
+
         /* ---------------- Getters Methods ------------------- */
         public function get_properties() {
-            if(isset($_SESSION["player"])) {
-                return $_SESSION["player"];
-            }
-            return false;
+            $list = [
+                "id" => $this->get_id(),
+                "login" => $this->get_login(),
+                "password" => $this->get_password(),
+                "best_score" => $this->get_best_score(),
+                "ranking" => $this->get_ranking(),
+                "score" => $this->get_score(),
+                "click" => $this->get_number_of_click(),
+            ];
+            
+            return $list;
         }
 
         public function get_id() {
@@ -156,7 +170,12 @@
             return $this->login;
         }
 
+        public function get_password() {
+            return $this->password;
+        }
+
         public function get_score() {
+            $this->score = $_SESSION["score"];
             return $this->score;
         }
 
@@ -192,13 +211,10 @@
 
 
         /* ---------------- Setters Methods ------------------- */
-        public function set_score($even_number) {
-            $this->score = $this->get_number_of_click() / $even_number; //rule
-            $_SESSION["score"] = $this->get_score();
+        public function set_score($score_game) {
+            $_SESSION["score"] = $score_game;
 
-            if($this->get_score() < $this->get_best_score()) {
-                $this->set_best_score();
-            }
+            //supprimer ou vider la valuer de session score apres la fin du partie (quand on efface la fenêtre sortie a la finn de la partie) =crie un function new_game est mit a l'intérieur session['score] = null, session['click] = 0 ... 
         }
 
         protected function set_best_score() {
@@ -214,8 +230,7 @@
         }
 
         public function set_click() {
-            $this->click = $_SESSION["click"] + 1;
-            $_SESSION["click"] = $this->click;
+            $_SESSION["click"] = ++$this->click;
         }
 
         protected function set_rank($new_rank) {
@@ -223,7 +238,7 @@
             $_SESSION["player"]->ranking = $new_rank;
         }
 
-        protected function update_rank() { //new_rank c'est la result de jeu
+        protected function update_rank() {
             //mise a jour le classement des joueur quand qullqu'un atteint un nouveau best_score
             $this->ranking_list->update_ranking_list();
 
@@ -233,6 +248,4 @@
         }
     }
 
-    $player = Players::get_instance();
-
-
+    $player = Players::get_instance(); //Singleton pattern

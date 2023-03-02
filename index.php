@@ -1,8 +1,32 @@
 <?php
     require_once("inc/Players.php"); 
-    if(isset($_SESSION["player"])) {
-        $player->update_local_data($_SESSION["player"]);
 
+    if(isset($_SESSION["player"])) {
+        $login = $_SESSION["player"]->login;
+        $password = $_SESSION["player"]->password;
+        //reconnexion avec les donnes stocker dans la session player quand creer dans la method player->connect() qu'on a appeler la 1er fois sur la page connexion.php 
+        $player->connect($login, $password);
+
+        var_dump($player->get_properties());
+        echo "<br>";
+        echo "click : ".$player->get_number_of_click();
+        echo "<br>";
+        echo "<br>";
+        echo "score : ".$player->get_score();
+        echo "<br>";
+        $player->set_click();
+        echo "<br>";
+        $player->update_score(999);
+        echo "score : ".$player->get_score();
+        echo "<br>";
+        echo "<br>";
+        echo "best_score : ".$player->get_best_score();
+        echo "<br>";
+        echo "<br>";
+        echo "rank : ".$player->get_ranking();
+        echo "<br>";
+        echo "<br>";
+        echo "<br>";
     }
     
 ?>
