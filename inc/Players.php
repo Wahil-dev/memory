@@ -15,16 +15,6 @@
         protected $tbname;
         public $conn;
 
-        private static $instance = NULL;
-
-        //Get object created
-        public static function get_instance() {
-            if(self::$instance === NULL) {
-                self::$instance = new self();
-            }
-            return self::$instance;
-        }
-
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
@@ -219,15 +209,15 @@
             return $list;
         }
 
-        public function get_id() {
+        public function get_id() :string {
             return $this->id;
         }
 
-        public function get_login() {
+        public function get_login() :string {
             return $this->login;
         }
 
-        public function get_password() {
+        public function get_password() :string {
             return $this->password;
         }
 
@@ -322,4 +312,5 @@
         }
     }
 
-    $player = Players::get_instance(); //Singleton pattern
+    //$player = Players::get_instance(); //Singleton pattern
+    $player = new Players;
