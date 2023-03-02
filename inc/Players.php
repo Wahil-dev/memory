@@ -20,7 +20,7 @@
         public function __construct() {
             $this->conn = Parent::__construct();
             $this->tbname = "players";
-            $this->best_score = 5;
+            $this->best_score = 8;
             $this->click = 0; //number of click
             $this->ranking_list = new Ranking();
         }
@@ -118,6 +118,14 @@
                 exit();
             }
         }
+        
+        protected function initialize_rank() {
+            $sql = "SELECT MAX(ranking) as my_rank FROM ".$this->get_table_name();
+            $req = $this->conn->prepare($sql);
+            $req->execute();
+
+            return $req->fetchObject()->my_rank + 1; // 1 plus le dernier rank
+        }
 
         /* ---------------- Getters Methods ------------------- */
         public function get_properties() {
@@ -148,6 +156,7 @@
         }
 
         public function get_number_of_click() {
+            $this->click = $_SESSION["click"];
             return $this->click;
         }
 
@@ -159,9 +168,19 @@
             return $this->tbname;
         }
 
+        public function get_rank_by_id() {
+            $sql = "SELECT * FROM ".$this->get_table_name()." 
+            WHERE id = $this->id";  
+            $req = $this->conn->prepare($sql);
+            $req->execute();
+
+            return $req->fetchObject();
+        }
+
+
         /* ---------------- Setters Methods ------------------- */
-        public function set_score($score) {
-            $this->score = $score;
+        public function set_score($even_number) {
+            $this->score = $this->get_number_of_click() / $even_number; //rule
             $_SESSION["score"] = $this->get_score();
 
             if($this->get_score() < $this->get_best_score()) {
@@ -176,33 +195,29 @@
             $req->bindParam(1, $new_best_score);
             $req->bindParam(2, $this->id);
             $req->execute();
+
+            //mettre a jour les classement de joueur
+            $this->update_rank();
         }
 
         public function set_click() {
             $this->click = $_SESSION["click"] + 1;
-            $_SESSION["click"] = $this->get_number_of_click();
+            $_SESSION["click"] = $this->click;
         }
 
-        protected function initialize_rank() {
-            $sql = "SELECT MAX(ranking) as my_rank FROM ".$this->get_table_name();
-            $req = $this->conn->prepare($sql);
-            $req->execute();
-
-            return $req->fetchObject()->my_rank + 1; // 1 plus le dernier rank
+        protected function set_rank($new_rank) {
+            $this->my_rank = $new_rank;
+            $_SESSION["player"]->ranking = $new_rank;
         }
 
-        // protected function set_rank($rank) {
-        //     if($new_rank < $this->get_my_rank()) {
-        //         $this->my_rank = $new_rank;
-        //         $_SESSION["player"]->ranking = $this->get_my_rank();
+        protected function update_rank() { //new_rank c'est la result de jeu
+            //mise a jour le classement des joueur quand qullqu'un atteint un nouveau best_score
+            $this->ranking_list->update_ranking_list();
 
-        //         $sql = "UPDATE ".$this->get_table_name()." SET ranking = ? WHERE id = ?";
-        //         $req = $this->conn->prepare($sql);
-        //         $req->bindParam(1, $new_rank);
-        //         $req->bindParam(2, $id);
-        //         $req->execute();
-        //     }
-        // }
+            //set new_rank
+            $this->set_rank($this->get_rank_by_id()->ranking);
+            
+        }
     }
 
     $player = new Players();

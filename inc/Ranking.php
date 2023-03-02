@@ -4,11 +4,9 @@
     class Ranking extends Bdd {
         protected $conn;
         protected $tbname;
-        protected $players_tbname;
 
         public function __construct() {
-            $this->tbname = "ranking";
-            $this-> players_tbname = "players";
+            $this->tbname = "players";
             $this->conn = Parent::__construct();
         }
 
@@ -17,8 +15,16 @@
             return $this->tbname;
         }
 
+        protected function get_all_players() {
+            $sql = "SELECT * FROM ".$this->get_table_name()." ORDER BY best_score ASC";
+            $req = $this->conn->prepare($sql);
+            $req->execute();
+
+            return $req->fetchAll(PDO::FETCH_OBJ);
+        }
+
         public function get_best_ten_player() {
-            $sql = "SELECT id, login, ranking, best_score FROM ".$this->players_tbname." 
+            $sql = "SELECT id, login, ranking, best_score FROM ".$this->get_table_name()." 
             ORDER BY best_score ASC LIMIT 10 OFFSET 0";  
             
             $req = $this->conn->prepare($sql);
@@ -27,31 +33,18 @@
             return $req->fetchAll(PDO::FETCH_OBJ);
         }
 
-        public function get_rank_by_id($id) {
-            $sql = "SELECT id, ranking, best_score FROM ".$this->players_tbname." 
-            WHERE id = $id ORDER BY best_score ASC";  
-            
-            $req = $this->conn->prepare($sql);
-            $req->execute();
-
-            return $req->fetchObject()->ranking;
-        }
-
 
         /* -------------------- Setters Methods -------------------- */
-        public function set_rank($id, $new_rank) {
-            $sql = "UPDATE ".$this->players_tbname." SET ranking = ? WHERE id = ?";
-            $req = $this->conn->prepare($sql);
-            $req->bindParam(1, $new_rank);
-            $req->bindParam(2, $id);
-            $req->execute();
-        }
 
 
 
         /* -------------------- Others Methods --------------------- */
-        public function process_rank($id, $new_rank) {
-            $this->set_rank(id :$id, new_rank: $new_rank);
+        protected function process_rank($id, $new_rank) {
+            $sql = "UPDATE ".$this->get_table_name()." SET ranking = ? WHERE id = ?";
+            $req = $this->conn->prepare($sql);
+            $req->bindParam(1, $new_rank);
+            $req->bindParam(2, $id);
+            $req->execute();
         }
 
         public function display_best_ten_player() { ?>
@@ -88,4 +81,12 @@
                 </article>
             </section>
         <?php }
+
+        public function update_ranking_list() {
+            $i = 0;
+            $player = $this->get_all_players()[$i];
+            for($i ; isset($players[$i]); $i++) {
+                $this->process_rank($player->id, $i);
+            }
+        }
     }
