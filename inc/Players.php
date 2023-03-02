@@ -159,7 +159,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for($i = 0 ; isset($this->get_best_ten_player()[$i]); $i++) :?>
+                            <?php for($i = 1 ; isset($this->get_best_ten_player()[$i]); $i++) :?>
                                 <?php // *** Partager les classements
                                     $this->process_rank($this->get_best_ten_player()[$i]->id, $i)
                                     ?>
@@ -259,8 +259,12 @@
             $sql = "SELECT * FROM ".$this->get_table_name()." ORDER BY best_score ASC";
             $req = $this->conn->prepare($sql);
             $req->execute();
+            
+            $res = $req->fetchAll(PDO::FETCH_OBJ);
+            //ajouter une value au premier index pour on commence de partager les classements par l'index 1 (car le premier classement si 1)
+            array_unshift($res, "");
 
-            return $req->fetchAll(PDO::FETCH_OBJ);
+            return $res;
         }
 
         public function get_best_ten_player() :array {
@@ -269,7 +273,11 @@
             $req = $this->conn->prepare($sql);
             $req->execute();
 
-            return $req->fetchAll(PDO::FETCH_OBJ);
+            $res = $req->fetchAll(PDO::FETCH_OBJ);
+            //ajouter une value au premier index pour on commence de partager les classements par l'index 1 (car le premier classement si 1)
+            array_unshift($res, "");
+
+            return $res;
         }
 
 
