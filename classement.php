@@ -1,5 +1,4 @@
 <?php
-    require_once("inc/Ranking.php"); 
     require_once("inc/Players.php");     
     
     if(isset($_SESSION["player"])) {
@@ -13,7 +12,7 @@
 <?php require_once("inc/header.php"); ?>
     <div class="container">
         <main class="main">
-            <?php $ranking->display_best_ten_player();?>
+            <?php $player->display_best_ten_player();?>
         </main>
     </div>
 </body>
