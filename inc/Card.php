@@ -30,8 +30,13 @@
 
         /* ----------------- Static Methods ------------------ */
         public static function get_list_of_cards() {
-            self::$list_of_cards = $_SESSION["list_cards_created"];
-            return self::$list_of_cards;
+            if(!isset($_SESSION["game_list_cards_created"])) {
+                $_SESSION["game_list_cards_created"] = serialize(self::$list_of_cards);
+                return self::$list_of_cards;
+            }
+
+            self::$list_of_cards = $_SESSION["game_list_cards_created"];
+            return unserialize(self::$list_of_cards);
         }
 
         public static function create_cards_game() {
@@ -40,25 +45,34 @@
                 array_push(self::$list_of_cards, $card);
             }   
 
-            return serialize(self::$list_of_cards);
+            return self::$list_of_cards;
         }
 
         public static function get_card_clicked($id) {
-            foreach(self::$list_of_cards as $card) {
+            $new_list_of_cards = [];
+            foreach(self::get_list_of_cards() as $card) {
                 if($card->get_id() == $id) {
                     $card->set_image($id);
                     var_dump($card);
                 }
+                array_push($new_list_of_cards, $card);
             }
+
+            self::update_list_of_cards($new_list_of_cards);
         }
 
         
         public static function draw_card() {
             foreach(self::get_list_of_cards() as $card) {
                 echo '<article class="card">
-                    <a href="?id='.$card->get_id().'" id=""><img src="assets/img/default.jpg"></a>
+                    <a href="?id='.$card->get_id().'" id=""><img src="'.$card->get_image().'"></a>
                 </article>';
             }
+        }
+
+        
+        public static function update_list_of_cards($new_list_of_cards) {
+            $_SESSION["game_list_cards_created"] = serialize($new_list_of_cards);
         }
 
         public static function quit_game() {
