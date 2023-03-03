@@ -33,11 +33,13 @@
                             header("Location: game_home.php");
                             exit();
                         }
+                        
+                        print_r($_SESSION);
 
-                        foreach(Card::get_list_of_cards() as $card) {
-                            echo "<br>";
-                            print_r($card);
-                        }
+                        // foreach(Card::get_list_of_cards() as $card) {
+                        //     echo "<br>";
+                        //     print_r($card);
+                        // }
                     ?>
                 <?php endif?>
             </section>

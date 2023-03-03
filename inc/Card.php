@@ -8,11 +8,13 @@
         protected $current_img;
         protected $default_img;
         protected $displayed; //image afficher ou non
+        protected $completed; 
         protected static $list_of_cards = [];
 
         public function __construct($id, $name) {
             $this->id = $id;
             $this->name = $name;
+            $this->completed = false;
             $this->default_img = "default";
             $this->current_img = $this->default_img;
         }
@@ -37,6 +39,10 @@
             return $this->displayed;
         }
 
+        public function is_completed() {
+            return $this->completed;
+        }
+
         //pour la carte clicker
         public function update_card_status() {
             if($this->is_displayed()) {
@@ -47,8 +53,11 @@
         }
 
         //pour toutes les cartes que ne sont pas clicker
-        public function set_disabled_to_false() {
-            $this->displayed = false;
+        public function set_displayed_to_false() {
+            //si on a pas trouver les deux carte qui se resemble
+            if(!$this->completed) {
+                $this->displayed = false;
+            }
         }
 
 
@@ -56,6 +65,11 @@
         public function set_image($image) {
             $this->current_img = $image;
         }
+
+        public function set_completed() {
+            $this->completed = true;
+        }
+
 
         /* ----------------- Static Methods ------------------ */
         public static function get_list_of_cards() {
@@ -87,15 +101,36 @@
                 if($card->get_id() == $id) {
                     //change l'image de la carte clicker
                     if(!$card->is_displayed()) {
+                        $_SESSION["last_card_opened"][] = $card->get_name();
+
+                        if(count($_SESSION["last_card_opened"]) == 2) {
+                            if($_SESSION["last_card_opened"][0] == $_SESSION["last_card_opened"][1]) {
+                                $card->set_completed();
+                                self::set_completed_by_name($card->get_name());
+                                unset($_SESSION["last_card_opened"]);
+                                header("refresh:0");
+                                exit();
+                            } else {
+                                //delete the first element of array
+                                array_shift($_SESSION["last_card_opened"]);
+                            }
+                        }
+
                         $card->set_image($card->get_name());
                     } else {
-                        $card->set_image($card->get_default_img());
+                        if(!$card->is_completed()) {
+                            $card->set_image($card->get_default_img());
+                        }
                     }
                     //update card status
-                    $card->update_card_status();
+                    if(!$card->is_completed()) {
+                        $card->update_card_status();
+                    }
                 } else {
-                    $card->set_image($card->get_default_img());
-                    $card->set_disabled_to_false();
+                    if(!$card->is_completed()) {
+                        $card->set_image($card->get_default_img());
+                        $card->set_displayed_to_false();
+                    }
                 }
                 array_push($new_list_of_cards, $card);
             }
@@ -126,6 +161,7 @@
             
             unset($_SESSION["click"]);
             unset($_SESSION["score"]);
+            unset($_SESSION["last_card_opened"]);
             //redirect to game_home
             header("location: ../game_home.php");
             exit();
@@ -137,5 +173,16 @@
                     return $card;
                 }
             }
+        }
+
+        public static function set_completed_by_name($name_of_card) {
+            $new_list_of_cards = [];
+            foreach(self::get_list_of_cards() as $card) {
+                if($card->get_name() == $name_of_card) {
+                    $card->set_completed();
+                }
+                array_push($new_list_of_cards, $card);
+            }
+            self::update_list_of_cards($new_list_of_cards);
         }
     }
