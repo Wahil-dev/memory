@@ -28,12 +28,15 @@
 
                         Card::draw_card();
                         
-                        var_dump(Card::get_list_of_cards());
+                        foreach(Card::get_list_of_cards() as $card) {
+                            echo "<br>";
+                            print_r($card);
+                        }
 
-                        if(isset($_GET["id"])) {
-                            $id = $_GET["id"];
-                            Card::get_card_clicked($id);
-                            header("location: ".$_SERVER["PHP_SELF"]);
+                        if(isset($_GET["name"])) {
+                            $name = $_GET["name"];
+                            Card::get_card_clicked($name);
+                            header("Location: game_home.php");
                             exit();
                         }
                     ?>

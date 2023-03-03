@@ -4,28 +4,57 @@
     }
     class Card {
         private $id;
-        protected $displayed;
+        protected $name;
         protected $current_img;
+        protected $default_img;
+        protected $displayed; //image afficher ou non
         protected static $list_of_cards = [];
 
-        public function __construct($id) {
+        public function __construct($id, $name) {
             $this->id = $id;
-            $this->displayed = false;
-            $this->current_img = "default";
+            $this->name = $name;
+            $this->default_img = "default";
+            $this->current_img = $this->default_img;
         }
 
         public function get_id() {
             return $this->id;
         }
 
+        public function get_name() {
+            return $this->name;
+        }
+
         public function get_image() {
             return "assets/img/".$this->current_img.".jpg";
         }
 
+        public function get_default_img() {
+            return $this->default_img;
+        }
+
+        public function is_displayed() {
+            return $this->displayed;
+        }
+
+        //pour la carte clicker
+        public function update_card_status() {
+            if($this->is_displayed()) {
+                $this->displayed = false;
+                return;
+            }
+            $this->displayed = true;
+        }
+
+        //pour toutes les cartes que ne sont pas clicker
+        public function set_disabled_to_false() {
+            $this->displayed = false;
+        }
+
 
         /* ----------------- Setters Methods ------------------ */
-        public function set_image($id) {
-            $this->current_img = $id;
+        public function set_image($image) {
+            $this->current_img = $image;
         }
 
         /* ----------------- Static Methods ------------------ */
@@ -41,23 +70,34 @@
 
         public static function create_cards_game() {
             for($i = 1; $i <= $_SESSION["even_number_game"]; $i++) {
-                $card = new self($i);
-                array_push(self::$list_of_cards, $card);
-            }   
+                $name_of_card = $i;
+                $card_id = $i;
+                $card_paire_1 = new self($card_id, $name_of_card);
+                $card_paire_2 = new self($card_id, $name_of_card);
 
+                array_push(self::$list_of_cards, $card_paire_1, $card_paire_2);
+            }   
             return self::$list_of_cards;
         }
 
-        public static function get_card_clicked($id) {
+        public static function get_card_clicked($name) {
             $new_list_of_cards = [];
             foreach(self::get_list_of_cards() as $card) {
-                if($card->get_id() == $id) {
-                    $card->set_image($id);
-                    var_dump($card);
+                if($card->get_name() == $name) {
+                    //change l'image de la carte clicker
+                    if(!$card->is_displayed()) {
+                        $card->set_image($name);
+                    } else {
+                        $card->set_image($card->get_default_img());
+                    }
+                    //update card status
+                    $card->update_card_status();
+                } else {
+                    $card->set_image($card->get_default_img());
+                    $card->set_disabled_to_false();
                 }
                 array_push($new_list_of_cards, $card);
             }
-
             self::update_list_of_cards($new_list_of_cards);
         }
 
@@ -65,7 +105,8 @@
         public static function draw_card() {
             foreach(self::get_list_of_cards() as $card) {
                 echo '<article class="card">
-                    <a href="?id='.$card->get_id().'" id=""><img src="'.$card->get_image().'"></a>
+                    <a href="?name='.$card->get_name().'" id=""><img src="'.$card->get_image()
+                    .'"></a>
                 </article>';
             }
         }
@@ -87,5 +128,13 @@
             //redirect to game_home
             header("location: ../game_home.php");
             exit();
+        }
+
+        public static function get_card_displayed() {
+            foreach(self::get_list_of_cards() as $card) {
+                if($card->get_card_status()) {
+                    return $card;
+                }
+            }
         }
     }
