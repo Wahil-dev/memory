@@ -162,6 +162,7 @@
             unset($_SESSION["click"]);
             unset($_SESSION["score"]);
             unset($_SESSION["last_card_opened"]);
+            unset($_SESSION["win"]);
             //redirect to game_home
             header("location: ../game_home.php");
             exit();
@@ -184,5 +185,19 @@
                 array_push($new_list_of_cards, $card);
             }
             self::update_list_of_cards($new_list_of_cards);
+        }
+
+        public static function player_win() {
+            global $win;
+            $win = true;
+            foreach(self::get_list_of_cards() as $card) {
+                if($card->is_completed() == false) {
+                    $win = false;
+                }
+            }
+            if($win) {
+                //self::quit_game();
+            }
+            return $win;
         }
     }
