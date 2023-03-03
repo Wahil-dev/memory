@@ -81,13 +81,13 @@
             return self::$list_of_cards;
         }
 
-        public static function get_card_clicked($name) {
+        public static function get_card_clicked($id) {
             $new_list_of_cards = [];
             foreach(self::get_list_of_cards() as $card) {
-                if($card->get_name() == $name) {
+                if($card->get_id() == $id) {
                     //change l'image de la carte clicker
                     if(!$card->is_displayed()) {
-                        $card->set_image($name);
+                        $card->set_image($card->get_name());
                     } else {
                         $card->set_image($card->get_default_img());
                     }
@@ -106,7 +106,7 @@
         public static function draw_card() {
             foreach(self::get_list_of_cards() as $card) {
                 echo '<article class="card">
-                    <a href="?name='.$card->get_name().'" id=""><img src="'.$card->get_image()
+                    <a href="?id='.$card->get_id().'" id=""><img src="'.$card->get_image()
                     .'"></a>
                 </article>';
             }
