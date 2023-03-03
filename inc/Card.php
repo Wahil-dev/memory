@@ -126,7 +126,7 @@
             unset($_SESSION["click"]);
             unset($_SESSION["score"]);
             //redirect to game_home
-            header("location: ../game_home.php");
+            header("location: ../index.php");
             exit();
         }
 
