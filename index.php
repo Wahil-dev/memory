@@ -3,8 +3,6 @@
 
     if(isset($_SESSION["player"])) {
         $player->re_login();
-
-        echo $player->get_ranking();
     }
 ?>
 

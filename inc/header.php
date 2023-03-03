@@ -19,7 +19,7 @@
             <ul class="menu flex-r">
                 <li><a href="index.php"><?php echo $player->get_login()?></a></li>
                 <li><a href="index.php">acceuil</a></li>
-                <li><a href="connexion.php">game</a></li>
+                <li><a href="game_home.php">game</a></li>
                 <li><a href="classement.php">classement</a></li>
                 <li><a href="inc/logout.php">déconnexion</a></li>
             </ul>
