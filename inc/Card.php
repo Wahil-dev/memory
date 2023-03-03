@@ -69,11 +69,12 @@
         }
 
         public static function create_cards_game() {
+            $num = 1;
             for($i = 1; $i <= $_SESSION["even_number_game"]; $i++) {
                 $name_of_card = $i;
-                $card_id = $i;
+                $card_id = &$i;
                 $card_paire_1 = new self($card_id, $name_of_card);
-                $card_paire_2 = new self($card_id, $name_of_card);
+                $card_paire_2 = new self(++$card_id, $name_of_card);
 
                 array_push(self::$list_of_cards, $card_paire_1, $card_paire_2);
             }   
@@ -126,7 +127,7 @@
             unset($_SESSION["click"]);
             unset($_SESSION["score"]);
             //redirect to game_home
-            header("location: ../index.php");
+            header("location: ../game_home.php");
             exit();
         }
 
