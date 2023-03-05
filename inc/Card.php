@@ -11,11 +11,10 @@
         protected $completed; 
         protected static $list_of_cards = [];
 
-        public function __construct($id, $name) {
-            $this->id = $id;
+        public function __construct($name) {
             $this->name = $name;
-            $this->completed = false;
             $this->default_img = "default";
+            $this->completed = false;
             $this->current_img = $this->default_img;
         }
 
@@ -70,6 +69,10 @@
             $this->completed = true;
         }
 
+        public function set_id($id) {
+            $this->id = $id;
+        }
+
 
         /* ----------------- Static Methods ------------------ */
         public static function get_list_of_cards() {
@@ -83,16 +86,27 @@
         }
 
         public static function create_cards_game() {
-            for($i = 1; $i <= $_SESSION["even_number_game"]*2; $i++) {
+            for($i = 1; $i <= $_SESSION["even_number_game"]; $i++) {
                 $name_of_card = $i;
-                $card_id = $i;
-                $card_paire_1 = new self($card_id, $name_of_card);
-                $card_paire_2 = new self(++$card_id, $name_of_card);
+                $card_paire_1 = new self($name_of_card);
+                $card_paire_2 = new self($name_of_card);
 
                 array_push(self::$list_of_cards, $card_paire_1, $card_paire_2);
-                ++$i;
-            }   
+            }  
+
+            self::$list_of_cards = self::set_id_to_card(self::$list_of_cards);
             return self::$list_of_cards;
+        }
+
+        public static function set_id_to_card($cards_without_id) {
+            $new_list_of_cards = [];
+            $id = 1;
+            foreach($cards_without_id as $card) {
+                $card->set_id($id);
+                $id++;
+                array_push($new_list_of_cards, $card);
+            }
+            return $new_list_of_cards;
         }
 
         public static function get_card_clicked($id) {
@@ -115,7 +129,6 @@
                                 array_shift($_SESSION["last_card_opened"]);
                             }
                         }
-
                         $card->set_image($card->get_name());
                     } else {
                         if(!$card->is_completed()) {
@@ -135,6 +148,8 @@
                 array_push($new_list_of_cards, $card);
             }
             self::update_list_of_cards($new_list_of_cards);
+            header("Location: game_home.php");
+            exit();
         }
 
         

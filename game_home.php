@@ -30,18 +30,21 @@
                         <?php 
                             Card::create_cards_game();
                             Card::draw_card();
-                            
-                            if(isset($_GET["id"])) {
-                                $id = $_GET["id"];
-                                Card::get_card_clicked($id);
-                                header("Location: game_home.php");
-                                exit();
+
+                            foreach(Card::get_list_of_cards() as $card) {
+                                echo "<br>";
+                                print_r($card);
                             }
                             
                             if(Card::player_win()) {
                                 $_SESSION["win"] = true;
                                 header("Location: game_home.php");
                                 exit();
+                            }
+                                                        
+                            if(isset($_GET["id"])) {
+                                $id = $_GET["id"];
+                                Card::get_card_clicked($id);
                             }
                         ?>
                     <?php endif?>

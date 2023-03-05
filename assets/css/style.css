@@ -152,9 +152,9 @@ header .menu li a {
 
 /* ------------------------ Start Card Style ------------------------ */
 .content .card {
-    width: 130px;
+    width: 100px;
 }
-.content .even_number_game {
+.content .even_number_game {/* -even_number_game = class_of_input- */
     width: 160px;
 }
 
