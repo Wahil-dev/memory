@@ -6,6 +6,12 @@
     line-height: 1.6;
 }
 
+/* ---- quand une carte est afficher "displayed" ---- */
+.displayed {
+    pointer-events: none;
+    cursor: default;
+}
+
 :root {
     --danger-color: #DC3545;
 }
@@ -154,12 +160,17 @@ header .menu li a {
 .content .card {
     width: 100px;
 }
-.content .even_number_game {/* -even_number_game = class_of_input- */
-    width: 160px;
+
+.content .card a {
+    display: block;
 }
 
 .content .card img {
     width: 100%;
+}
+
+.content .even_number_game {/* -even_number_game = class_of_input- */
+    width: 160px;
 }
 
 /* ------------------------ Start Card Style ------------------------ */

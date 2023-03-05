@@ -48,7 +48,7 @@
                 $this->displayed = false;
                 return;
             }
-            $this->displayed = true;
+            $this->displayed = "displayed";
         }
 
         //pour toutes les cartes que ne sont pas clicker
@@ -67,6 +67,10 @@
 
         public function set_completed() {
             $this->completed = true;
+        }
+
+        public function set_displayed() {
+            $this->displayed = "displayed";
         }
 
         public function set_id($id) {
@@ -130,11 +134,8 @@
                             }
                         }
                         $card->set_image($card->get_name());
-                    } else {
-                        if(!$card->is_completed()) {
-                            $card->set_image($card->get_default_img());
-                        }
                     }
+                    
                     //update card status
                     if(!$card->is_completed()) {
                         $card->update_card_status();
@@ -156,7 +157,7 @@
         public static function draw_card() {
             foreach(self::get_list_of_cards() as $card) {
                 echo '<article class="card">
-                    <a href="?id='.$card->get_id().'" id=""><img src="'.$card->get_image()
+                    <a href="?id='.$card->get_id().'" class="'.$card->is_displayed().'"><img src="'.$card->get_image()
                     .'"></a>
                 </article>';
             }
@@ -196,6 +197,9 @@
             foreach(self::get_list_of_cards() as $card) {
                 if($card->get_name() == $name_of_card) {
                     $card->set_completed();
+                    $card->set_displayed();
+                    $card->set_image($card->get_name());
+
                 }
                 array_push($new_list_of_cards, $card);
             }
