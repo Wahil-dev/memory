@@ -19,7 +19,7 @@
                 <?php else :?>
                     <?php if(!isset($_SESSION["game_started"])) :?>
                         <form action="inc/b_game.php" method="post">
-                            <input type="number" name="even_number_game" id="even_number_game" placeholder="even_number_game" min='2' max='12' class="even_number_game" required>
+                            <input type="number" name="even_number_game" id="even_number_game" placeholder="even_number_game" min='2' max='10' class="even_number_game" required>
 
                             <input type="submit" value="start game">
                         </form>
@@ -31,10 +31,10 @@
                             Card::create_cards_game();
                             Card::draw_card();
 
-                            foreach(Card::get_list_of_cards() as $card) {
-                                echo "<br>";
-                                print_r($card);
-                            }
+                            // foreach(Card::get_list_of_cards() as $card) {
+                            //     echo "<br>";
+                            //     print_r($card);
+                            // }
                             
                             if(Card::player_win()) {
                                 $_SESSION["win"] = true;

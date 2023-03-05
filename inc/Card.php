@@ -126,7 +126,7 @@
                                 $card->set_completed();
                                 self::set_completed_by_name($card->get_name());
                                 unset($_SESSION["last_card_opened"]);
-                                header("refresh:0");
+                                header("Location: game_home.php");
                                 exit();
                             } else {
                                 //delete the first element of array
