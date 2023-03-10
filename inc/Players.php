@@ -261,7 +261,7 @@
             $req->execute();
             
             $res = $req->fetchAll(PDO::FETCH_OBJ);
-            //ajouter une value au premier index pour on commence de partager les classements par l'index 1 (car le premier classement si 1)
+            //ajouter une value au premier index pour on commence de partager les  classements par l'index 1 (car le premier classement si 1)
             array_unshift($res, "");
 
             return $res;

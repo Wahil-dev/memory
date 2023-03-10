@@ -227,9 +227,6 @@
                     $win = false;
                 }
             }
-            if($win) {
-                //self::quit_game();
-            }
             return $win;
         }
     }

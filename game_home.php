@@ -4,7 +4,13 @@
 
     if(isset($_SESSION["player"])) {
         $player->re_login();
+
+        //calcul_score_game 
+        if(isset($_SESSION["win"])) {
+            $player->calcul_score_game($_SESSION["even_number_game"]);
+        }
     }
+    
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +21,12 @@
             <section class="content flex-r">
                 <?php if(isset($_SESSION["win"])) :?>
                     <h1>Vous etez gagner !</h1>
+                    <div class="result-box">
+                        <div><b>Name : </b><?= $player->get_login()?></div>
+                        <div><b>Score : </b><?= $player->get_score()?></div>
+                        <div><b>Rank : </b><?= $player->get_ranking()?></div>
+                        <div><b>Best_score : </b><?= $player->get_best_score()?></div>
+                    </div>
                     <a href="inc/quit_game.php">nouveau game</a>
                 <?php else :?>
                     <?php if(!isset($_SESSION["game_started"])) :?>
@@ -38,6 +50,8 @@
                             }
                                                         
                             if(isset($_GET["id"])) {
+                                //set_click
+                                $player->set_click();
                                 $id = $_GET["id"];
                                 Card::get_card_clicked($id);
                             }
