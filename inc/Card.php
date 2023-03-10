@@ -81,8 +81,9 @@
         /* ----------------- Static Methods ------------------ */
         public static function get_list_of_cards() {
             if(!isset($_SESSION["game_list_cards_created"])) {
+                shuffle(self::$list_of_cards);
                 $_SESSION["game_list_cards_created"] = serialize(self::$list_of_cards);
-                return self::$list_of_cards;
+                //return self::$list_of_cards;
             }
 
             self::$list_of_cards = $_SESSION["game_list_cards_created"];
@@ -110,6 +111,18 @@
                 $id++;
                 array_push($new_list_of_cards, $card);
             }
+
+            // $_SESSION["game_card_created"] = [];
+            // $new_list_of_cards_2 = [];
+            // while(count($_SESSION["game_card_created"]) < 
+            // count(self::get_list_of_cards())-1) {
+            
+            //     $card_id = rand(0, count(self::get_list_of_cards())-1);
+            //     if(!(in_array($card_id, $_SESSION["game_card_created"]))) {
+            //         array_push($new_list_of_cards_2, $new_list_of_cards[$card_id]);
+            //         $_SESSION["game_card_created"][] = $card_id;
+            //     }
+            // }
             return $new_list_of_cards;
         }
 

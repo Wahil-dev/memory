@@ -31,11 +31,6 @@
                             Card::create_cards_game();
                             Card::draw_card();
 
-                            // foreach(Card::get_list_of_cards() as $card) {
-                            //     echo "<br>";
-                            //     print_r($card);
-                            // }
-                            
                             if(Card::player_win()) {
                                 $_SESSION["win"] = true;
                                 header("Location: game_home.php");
