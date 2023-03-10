@@ -26,6 +26,8 @@
                         <div><b>Score : </b><?= $player->get_score()?></div>
                         <div><b>Rank : </b><?= $player->get_ranking()?></div>
                         <div><b>Best_score : </b><?= $player->get_best_score()?></div>
+                        <div><b>Click : </b><?= $player->get_number_of_click()?></div>
+                        <div><b>even_number_game : </b><?= $_SESSION["even_number_game"]?></div>
                     </div>
                     <a href="inc/quit_game.php">nouveau game</a>
                 <?php else :?>

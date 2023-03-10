@@ -184,7 +184,7 @@
         public function update_ranking_list() {
             //mise a jour le classement des joueur quand qullqu'un atteint un nouveau best_score
             $player = $this->get_all_players();
-            for($i = 0 ; isset($player[$i]); $i++) {
+            for($i = 1 ; isset($player[$i]); $i++) {
                 $this->process_rank($player[$i]->id, $i);
             }
 
@@ -304,7 +304,7 @@
         }
 
         public function set_click() {
-            $_SESSION["click"] = ++$this->click;
+            $_SESSION["click"]++;
         }
 
         protected function set_rank($new_rank) {
